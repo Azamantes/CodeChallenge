@@ -36,6 +36,10 @@ class Queue {
 
 		return true;
 	}
+	all() {
+		while(this.next())
+			;
+	}
 }
 
 module.exports = Queue;

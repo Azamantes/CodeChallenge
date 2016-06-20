@@ -21,25 +21,38 @@ class Table {
 		this.list = this.ref.child('list');
 		this.queue = new Queue();
 
-		this.ref.on('value', data => {
-			const root = data.val();
-			this[LIST] = root;
+		this.last.once('value', data => {
+			this[LAST_ID] = data.val();
+			if(this[LIST] !== null) {
+				this.queue.all();
+			}
 		});
-		
-	}
-	set lastID(value) {
-		if(value <= 0) {
-			return;
-		}
+		this.list.once('value', data => {
+			this[LIST] = data.val();
+			if(!isNaN(this[LAST_ID])) {
+				this.queue.all();
+			}
+		});
+		this.list.on('child_added', data => {
 
-		this[LAST_ID] = value;
-		this.last.set(value);
+			this.queue.all();
+		});
+		this.list.on('child_removed', data => {
+			
+			this.queue.all();
+		});
 	}
-	update(id, config) {
-		this.list.child(id).set(config);
-		if(!this.blocked) {
-			this.list[id] = config;
-		}
+	insert(config) {
+		const callback = (() => {
+			const id = ++this[LAST_ID];
+			this.last.set(id);
+			this.list.child(id).set(config);
+		}).bind(this);
+
+		if(isNaN(this[LAST_ID]) || this[LIST] === null) {
+			console.log();
+			this.queue.push(callback);
+		} else callback();
 	}
 }
 
