@@ -1,0 +1,65 @@
+// -------------------
+// ORDER EXAMPLE
+// -------------------
+const order = {
+ 	 "O1": {
+ 		"customer": {
+ 			"id": "C1",
+ 			"name": "John Smith",
+ 			"email": "john@smith.com"
+ 		},
+ 		"product": {
+ 			"id": "I1",
+ 			"name": "Item",
+ 			"price": 3.99
+ 		},
+ 		"payment": {
+ 			"type": "card",
+			"details": {
+				"number": "4000 0566 5566 5556",
+ 				"expiry": "02/2020",
+ 				"cvc": 222
+			}
+ 		}
+	}
+};
+
+// -------------------
+// ORDER CORRECTED
+// -------------------
+
+This is an example order I was given. I've found it structured in an inefficient way. It contains superfluous data and in some cases incorrect format.
+This is how I would structure the order object:
+
+const order = {
+	customer: {
+		name: 'John Smith',
+		email: 'john@smith.com',
+	},
+	productID : 1,
+	payment: {
+		type: 'card',
+		number: '4000 0566 5566 5556',
+		expiry: '02/2020',
+		cvc: 222,
+	}
+};
+
+// -------------------
+// NOTES
+// -------------------
+
+Main key:
+	O1 - unnecessary, each order should have a unique ID, not based on any provided information. Each order is a new and unique one, and thus ID should be generated automatically (by the way: should be an integer)
+
+Customer:
+	id - unnecessary since as in the task description each order should create ("... for every new order (e.g. <OBJECT>) in the Firebase database creates a new customer ...") a new customer,
+		 therefore this 'new customer' should have a unique ID to be uniquely identified in the application (by the way: should be an integer)
+
+Product: (no need to pass the whole product object information with each request.)
+	id - should be an integer
+	name - unnecessary, it can be retrieved from database using given productID
+	price - unnecessary, it can be retrieved from database using given productID
+
+Payment:
+	details - no need to create a subobject for details, I simply flattened it
