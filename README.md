@@ -1,2 +1,3 @@
 # CodeChallenge
-It's a secret...
+
+For suggestions regarding ORDER object structure -> look NOTES.
