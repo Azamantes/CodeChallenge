@@ -39,5 +39,3 @@ class Queue {
 }
 
 module.exports = Queue;
-
-// teczefnarjy
