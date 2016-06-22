@@ -22,13 +22,14 @@ This is an example order I was given. I've found it structured in an inefficient
 This is how I would structure the order object:
 
 ORDER CORRECTED:
-	- customerEmail: 'john@smith.com'
-	- price: 3.99
-	- payment:
-		- type: 'card'
-		- number: '4000 0566 5566 5556'
-		- expiry: '02/2020'
-		- cvc: 222
+
+- customerEmail: 'john@smith.com'
+- price: 3.99
+- payment:
+	- type: 'card'
+	- number: '4000 0566 5566 5556'
+	- expiry: '02/2020'
+	- cvc: 222
 
 NOTES:
 
