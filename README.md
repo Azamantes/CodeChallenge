@@ -5,7 +5,7 @@
 // -------------------
 
 const order = {
- 	 "O1": {
+ 	"O1": {
  		"customer": {
  			"id": "C1",
  			"name": "John Smith",
