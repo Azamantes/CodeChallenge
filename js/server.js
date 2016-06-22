@@ -1,44 +1,49 @@
 'use strict';
 
-// -------------------
-// DEPENDENCIES
-// -------------------
-const PATH = __dirname;
+const Handler = require('./order_handler.js');
+const Example = require('./order_example.js');
+const Stripe = require('stripe')('sk_test_Qbk1K5C0eoW44hMfWAVZMz2J');
 const Firebase = require('firebase');
-const Handler = require('./order_handler.js'); // order parser
-const Table = require('./table.js'); // order parser
-const ORDER_EXAMPLE = require('./order_example.js'); // order parser
-
-// -------------------
-// FIREBASE
-// -------------------
 Firebase.initializeApp({
-  serviceAccount: `${PATH}/../CodeChallenge-7233efcc3dbb.json`,
-  databaseURL: 'https://codechallenge-b1156.firebaseio.com'
+	serviceAccount: `${__dirname}\\credentials\\config.json`,
+	databaseURL: 'https://codechallenge-b1156.firebaseio.com/'
 });
-const database = new Firebase.database();
-
+const root = (new Firebase.database()).ref('/');
 
 // -------------------
-// "TABLES"
+// NEW ORDER
 // -------------------
-const Products = new Table({
-	ref: database.ref('products'),
-	blocked: true,
-});
-const Customers = new Table({
-	ref: database.ref('customers'),
-});
-const Orders = new Table({
-	ref: database.ref('orders'),
-});
-const OrderHandler = new Handler();
+// setTimeout(() => {
+// 	const config = Handler.parse(Example);
+// 	// if(!Handler.validate(config)) {
+// 	// 	return console.log('Handler :: invalid order.');
+// 	// }
+	
+// 	const order = root.push();
+// 	order.set({
+// 		amount: config.amount,
+// 		customerEmail: config.customerEmail,
+// 	});
 
-setInterval(() => {
-	const order = OrderHandler.parse(ORDER_EXAMPLE);
-	if(order === null) {
-		return !!console.log('order is invalid');
-	}
+// 	// ---------------------------
+// 	// STRIPE + Firebase update
+// 	// ---------------------------
+// 	let customerID;
+// 	Stripe.tokens.create({
+// 		[config.paymentType]: config.paymentDetails,
+// 	}).then(token => Stripe.customers.create({
+// 			source: token.id,
+// 			email: config.customerEmail,
+// 	})).then(customer => Stripe.charges.create({
+// 			customer: (customerID = customer.id),
+// 			amount: config.amount,
+// 			currency: 'usd',
+// 	})).then(charge => order.update({
+// 			'customerID': customerID,
+// 			'chargeID': charge.id,
+// 	})).catch(error => {
+// 		console.error(error)
+// 	});
+// }, 1500);
 
-	Customers.insert(order.customer);
-}, 2000);
+console.log('Testing...');

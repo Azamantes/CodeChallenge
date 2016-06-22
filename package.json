@@ -1,0 +1,23 @@
+{
+  "name": "code_challenge",
+  "version": "1.0.0",
+  "description": "Code challenge for handling new customer orders with Node.js, Firebase and Stripe.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azamantes/CodeChallenge.git"
+  },
+  "author": "Mateusz Walas (Azamantes)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Azamantes/CodeChallenge/issues"
+  },
+  "homepage": "https://github.com/Azamantes/CodeChallenge#readme",
+  "dependencies": {
+    "firebase": "^3.0.5",
+    "stripe": "^4.7.0"
+  }
+}
