@@ -64,6 +64,6 @@ setTimeout(() => {
 		console.error('CHARGE ERROR\n', error);
 	}).then(() => {
 		console.log('Done.');
-		process.exit();
+		process.exit(1);
 	});
 }, 1500);
