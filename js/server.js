@@ -63,6 +63,7 @@ setTimeout(() => {
 	}), error => {
 		console.error('CHARGE ERROR\n', error);
 	}).then(() => {
-		console.log('Done :)');
+		console.log('Done.');
+		process.exit();
 	});
 }, 1500);
