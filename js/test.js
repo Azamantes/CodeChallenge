@@ -1,11 +1,10 @@
 'use strict';
 
-const PATH = __dirname;
 const assert = require('chai').assert;
 const expect = require('chai').expect;
 
 const fs = require('fs');
-const CONFIG = JSON.parse(fs.readFileSync(`${PATH}/credentials/config.json`));
+const CONFIG = JSON.parse(fs.readFileSync(`${__dirname}/credentials/config.json`));
 
 const Handler = require('./order_handler.js');
 const Example = require('./order_example.js');
@@ -74,8 +73,11 @@ describe('new order', () => {
 			Stripe.tokens.create({
 				[config.paymentType]: config.payment,
 			}).then(token => {
-				it('should return token with an ID', () => {
-					expect(token.id).to.match(/.+/);
+				describe('Received token', () => {
+					it('should return token with an ID', () => {
+						expect(token.id).to.be.a('string');
+						expect(token.id).to.match(/.+/);
+					});
 				});
 
 				console.log('Created token:', token.id);
@@ -87,11 +89,14 @@ describe('new order', () => {
 			}, error => {
 				console.error('CHARGE ERROR\n', error);
 			}).then(customer => {
-				it('customer is an Object', () => {
-					assert.isObject(customer);
-				});
-				it('customer.id matches regexp', () => {
-					expect(customer.id).to.match(/^cus_[0-9a-z]{14}$/i);
+				describe('Received customer', () => {
+					it('customer is an Object', () => {
+						assert.isObject(customer);
+						expect(customer.id).to.be.a('string');
+					});
+					it('customer.id matches regexp', () => {
+						expect(customer.id).to.match(/^cus_[0-9a-z]{14}$/i);
+					});
 				});
 
 				console.log('Created customer:', customer.id);
@@ -104,13 +109,15 @@ describe('new order', () => {
 			}, error => {
 				console.error('CHARGE ERROR\n', error);
 			}).then(charge => {
-				it('charge is an Object', () => {
-					assert.isObject(charge);
+				describe('Received charge', () => {
+					it('charge is an Object', () => {
+						assert.isObject(charge);
+					});
+					it('charge.id matches regexp', () => {
+						expect(charge.id).to.be.a('string');
+					});
 				});
-				it('charge.id matches regexp', () => {
-					expect(charge.id).to.be.a.string();
-				});
-
+				
 				console.log('Created charge:', charge.id);
 
 				order.update({
