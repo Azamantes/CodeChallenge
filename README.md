@@ -62,4 +62,4 @@ therefore the only information I need is:
 	- expiry
 	- cvc
 
-Currency is missing, server should be somehow told what currency is the customer paying in. It is an issue not to be neglected :)
+Currency is missing, server should be told somehow what currency the customer is paying in. It is an issue not to be neglected :)
