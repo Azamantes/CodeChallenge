@@ -1,5 +1,15 @@
 # CodeChallenge
 
+File *test.js* contains slightly modified, but essentially the same exact code as *server.js* file.
+After installing all required packages listed in *package.json*:
+- run tests with `npm test`
+- run the actual server with `npm start`
+
+
+Below are my notes.
+
+I've used the example order and wrote code to handle it. My proposal on the bottom here is just a proposal. It would merely simplify the code if applied.
+
 ORDER EXAMPLE:
 - O1:
 	- customer:
@@ -46,7 +56,10 @@ therefore the only information I need is:
 - customer email (Stripe -> customer.email)
 - product price (Stripe -> charge.amount)
 - payment: (Stripe -> payment type and details)
+	- currency // missing in example order
 	- type
 	- number
 	- expiry
 	- cvc
+
+Currency is missing, server should be somehow told what currency is the customer paying in. It is an issue not to be neglected :)

@@ -1,49 +1,68 @@
 'use strict';
 
+const PATH = __dirname;
+
+const fs = require('fs');
+const CONFIG = JSON.parse(fs.readFileSync(`${PATH}/credentials/config.json`));
+
 const Handler = require('./order_handler.js');
 const Example = require('./order_example.js');
-const Stripe = require('stripe')('sk_test_Qbk1K5C0eoW44hMfWAVZMz2J');
 const Firebase = require('firebase');
+const Stripe = require('stripe')(CONFIG.stripe.key);
+
+// -----------
+// INIT
+// -----------
 Firebase.initializeApp({
-	serviceAccount: `${__dirname}\\credentials\\config.json`,
-	databaseURL: 'https://codechallenge-b1156.firebaseio.com/'
+	serviceAccount: CONFIG.firebase.account,
+	databaseURL: CONFIG.firebase.database,
 });
-const root = (new Firebase.database()).ref('/');
+const database = new Firebase.database()
+const root = database.ref('/');
 
-// -------------------
-// NEW ORDER
-// -------------------
-// setTimeout(() => {
-// 	const config = Handler.parse(Example);
-// 	// if(!Handler.validate(config)) {
-// 	// 	return console.log('Handler :: invalid order.');
-// 	// }
+// ------------------
+// HANDLE NEW ORDER
+// ------------------
+setTimeout(() => {
+	const config = Handler.parse(Example); // simulating new order, normally this `order example` would come from a browser or another server
+	if(config === null) {
+		console.log('---------------------');
+		console.log('Received order was invalid.');
+		console.log('---------------------');
+
+		return;
+	}
+
+	const order = root.push();
+	order.set({
+		amount: config.amount,
+		customerEmail: config.customerEmail,
+	});
+
+	// ---------------------------
+	// STRIPE + Firebase update
+	// ---------------------------
+	let customerID;
 	
-// 	const order = root.push();
-// 	order.set({
-// 		amount: config.amount,
-// 		customerEmail: config.customerEmail,
-// 	});
-
-// 	// ---------------------------
-// 	// STRIPE + Firebase update
-// 	// ---------------------------
-// 	let customerID;
-// 	Stripe.tokens.create({
-// 		[config.paymentType]: config.paymentDetails,
-// 	}).then(token => Stripe.customers.create({
-// 			source: token.id,
-// 			email: config.customerEmail,
-// 	})).then(customer => Stripe.charges.create({
-// 			customer: (customerID = customer.id),
-// 			amount: config.amount,
-// 			currency: 'usd',
-// 	})).then(charge => order.update({
-// 			'customerID': customerID,
-// 			'chargeID': charge.id,
-// 	})).catch(error => {
-// 		console.error(error)
-// 	});
-// }, 1500);
-
-console.log('Testing...');
+	Stripe.tokens.create({
+		[config.paymentType]: config.payment,
+	}).then(token => Stripe.customers.create({
+		source: token.id,
+		email: config.customerEmail,
+	}), error => {
+		console.error('TOKEN ERROR\n', error);
+	}).then(customer => Stripe.charges.create({
+		customer: (customerID = customer.id),
+		amount: config.amount,
+		currency: 'usd',
+	}), error => {
+		console.error('CUSTOMER ERROR\n', error);
+	}).then(charge => order.update({
+		customerID,
+		'chargeID': charge.id,
+	}), error => {
+		console.error('CHARGE ERROR\n', error);
+	}).then(() => {
+		console.log('Done :)');
+	});
+}, 1500);
